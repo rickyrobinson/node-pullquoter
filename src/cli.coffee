@@ -9,6 +9,10 @@ argvParser = require('optimist')
   number:
     alias: 'n'
     describe: 'How many quotes to pull (Default = 1)'
+  scoreOrder:
+    alias: 's'
+    describe: 'Shows the quotes in score order (The default is the order they appear in the text)'
+    boolean: true
   version:
     alias: 'v'
     describe: 'Show version information'
@@ -32,11 +36,12 @@ if argv.help
 
 file = argv._.shift()
 numberOfQuotes = argv.number || 1
+scoreOrder = argv.scoreOrder
 text = ""
 
 if file
   text = fs.readFileSync(file).toString()
-  process.stdout.write(pullquoter(text, numberOfQuotes).join("\n"))
+  process.stdout.write(pullquoter(text, numberOfQuotes, not scoreOrder).join("\n"))
   process.stdout.write("\n")
 else
   process.stdin.setEncoding('utf8')
@@ -47,5 +52,5 @@ else
       text += chunk
 
   process.stdin.on 'end', () ->
-    process.stdout.write(pullquoter(text, numberOfQuotes).join("\n"))
+    process.stdout.write(pullquoter(text, numberOfQuotes, not scoreOrder).join("\n"))
     process.stdout.write("\n")

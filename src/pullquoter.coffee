@@ -4,10 +4,10 @@ stopwords = require('stopwords').english
 memoize = require('memoizee')
 _ = require("lodash")
 
-module.exports = pullquoter = (content, numberOfQuotes = 1) ->
+module.exports = pullquoter = (content, numberOfQuotes = 1, textOrder = true) ->
   sentences = splitIntoSentences(content)
   sentenceScores = scoreSentences(sentences)
-  getTopSentences(sentences, sentenceScores, numberOfQuotes)
+  getTopSentences(sentences, sentenceScores, numberOfQuotes, textOrder)
 
 
 # Split raw text into an array of sentences
@@ -72,7 +72,7 @@ scoreSentences = (sentences) ->
   # quickest way to get a js array out of a mathjs vector.
   return scores._data
 
-getTopSentences = (sentences, sentenceScores, n) ->
+getTopSentences = (sentences, sentenceScores, n, textOrder) ->
   sentenceObjects = _.map sentences, (s, i) ->
     {
       sentence: s
@@ -88,7 +88,8 @@ getTopSentences = (sentences, sentenceScores, n) ->
 
   sentenceObjects = sentenceObjects[0...n]
 
-  sentenceObjects = _.sortBy sentenceObjects, (sentence) ->
-    sentence.orderInText
+  if textOrder
+    sentenceObjects = _.sortBy sentenceObjects, (sentence) ->
+      sentence.orderInText
 
   _.pluck(sentenceObjects, "sentence")
