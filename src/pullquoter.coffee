@@ -12,7 +12,7 @@ module.exports = pullquoter = (content, numberOfQuotes = 1, textOrder = true) ->
 
 # Split raw text into an array of sentences
 splitIntoSentences = (content) ->
-  content = content.replace("\n", ". ")
+  content = content.replace(/[^.]\n\n/, ". ")
   sentences = content.match(/(.+?[\.|\!|\?](?:\s|$))/g) or []
 
   _.map sentences, (sentence) ->
