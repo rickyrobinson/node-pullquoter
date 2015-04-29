@@ -80,8 +80,13 @@ getTopSentences = (sentences, sentenceScores, n, textOrder) ->
       orderInText: i
     }
 
-  sentenceObjects = _.sortBy sentenceObjects, (sentence_score) ->
-    -(sentence_score.score)
+  sentenceObjects = _.sortByAll sentenceObjects,
+    ((sentence_score) ->
+      -(sentence_score.score)
+    ),
+    ((sentence_score) ->
+      sentence_score.sentence.length
+    )
 
   if sentenceObjects.length < n
     n = sentenceObjects.length
